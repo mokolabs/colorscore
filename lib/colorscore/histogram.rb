@@ -6,7 +6,7 @@ module Colorscore
       params = [
         '-resize 400x400',
         '-format %c',
-        "-dither #{options.fetch(:dither) { 'None' }}"
+        "-dither #{options.fetch(:dither) { 'None' }}",
         "-quantize #{options.fetch(:quantize) { 'YIQ' }}",
         "-colors #{options.fetch(:colors) { 16 }.to_i}",
         "-depth #{options.fetch(:depth) { 8 }.to_i}",
@@ -37,7 +37,7 @@ module Colorscore
     def scores
       total = color_counts.inject(:+).to_f
       scores = color_counts.map { |count| count / total }
-      scores.zip(colors)
+      scores.zip(hex_colors)
     end
   end
 end
