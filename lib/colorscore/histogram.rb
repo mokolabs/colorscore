@@ -21,13 +21,9 @@ module Colorscore
     end
 
     # Returns an array of colors in descending order of occurances.
-    def hex_colors
+    def colors
       hex_values = @lines.map { |line| line[/#([0-9A-F]{6}) /, 1] }.compact
       hex_values.map { |hex| Color::RGB.from_html(hex) }
-    end
-
-    def rgb_colors
-      @lines.map { |line| line[/ \(([0-9, ]+)\) /, 1].split(',').map(&:strip).take(3).join(',') }.compact
     end
 
     def color_counts
@@ -37,7 +33,7 @@ module Colorscore
     def scores
       total = color_counts.inject(:+).to_f
       scores = color_counts.map { |count| count / total }
-      scores.zip(hex_colors)
+      scores.zip(colors)
     end
   end
 end
