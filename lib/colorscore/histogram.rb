@@ -2,15 +2,32 @@ require "shellwords"
 
 module Colorscore
   class Histogram
-    def initialize(image_path, colors=16, depth=8)
-      output = `convert #{image_path.shellescape} -resize 400x400 -format %c -dither None -quantize YIQ -colors #{colors.to_i} -depth #{depth.to_i} histogram:info:-`
-      @lines = output.lines.sort.reverse.map(&:strip).reject(&:empty?)
+    def initialize(image_path, options = {})
+      params = [
+        '-resize 400x400',
+        '-format %c',
+        "-dither #{options.fetch(:dither) { 'None' }}"
+        "-quantize #{options.fetch(:quantize) { 'YIQ' }}",
+        "-colors #{options.fetch(:colors) { 16 }.to_i}",
+        "-depth #{options.fetch(:depth) { 8 }.to_i}",
+        '-alpha deactivate '
+      ]
+
+      #params.unshift(options[:resize]) if options[:resize]
+
+      output = `convert #{image_path.shellescape} #{ params.join(' ') } histogram:info:-`
+      @lines = output.lines.map(&:strip).reject(&:empty?).
+        sort_by { |l| l[/(\d+):/, 1].to_i }
     end
 
     # Returns an array of colors in descending order of occurances.
-    def colors
+    def hex_colors
       hex_values = @lines.map { |line| line[/#([0-9A-F]{6}) /, 1] }.compact
       hex_values.map { |hex| Color::RGB.from_html(hex) }
+    end
+
+    def rgb_colors
+      @lines.map { |line| line[/ \(([0-9, ]+)\) /, 1].split(',').map(&:strip).take(3).join(',') }.compact
     end
 
     def color_counts

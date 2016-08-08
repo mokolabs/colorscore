@@ -36,5 +36,33 @@ module Colorscore
              sort_by { |score, color| score }.
              reverse
     end
+
+    # From a large palette, collects scores and reduces them based on
+    # the distance threshold (which can be varied to find a specific number of colors)
+    def collect_scores(distance_threshold=0.275, min_colors=3, max_colors=7)
+      def generate_scores(threshold)
+        @res = [[1,self[0]]]
+        @pivot = self[0]
+        self.each do |color|
+          if (Metrics.distance(@pivot, color)) > threshold
+            @res << [1,color]
+            @pivot = color
+          else
+            @res.last[0] +=1
+          end
+        end
+        @res
+      end
+
+      @results = generate_scores(distance_threshold)
+
+      if @results.length <= min_colors && distance_threshold > 0.05
+        self.collect_scores((distance_threshold-0.05))
+      elsif @results.length > max_colors && distance_threshold < 0.5
+        self.collect_scores((distance_threshold+0.05))
+      else
+        return @results
+      end
+    end
   end
 end

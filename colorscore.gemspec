@@ -3,13 +3,13 @@ $:.push File.expand_path("../lib", __FILE__)
 require "colorscore/version"
 
 Gem::Specification.new do |s|
-  s.name        = "colorscore"
+  s.name        = "jnylen-colorscore"
   s.version     = Colorscore::VERSION
-  s.authors     = ["Milo Winningham"]
-  s.email       = ["milo@winningham.net"]
+  s.authors     = ["Joakim Nylén", "Milo Winningham"]
+  s.email       = ["me@jnylen.nu"]
   s.summary     = %q{Finds the dominant colors in an image.}
   s.description = %q{Finds the dominant colors in an image and scores them against a user-defined palette, using the CIE2000 Delta E formula.}
-  
+
   s.add_dependency "color"
   s.add_development_dependency "rake"
   s.add_development_dependency "test-unit"
