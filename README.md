@@ -1,3 +1,5 @@
+Major change from normal colorscore: .colors is .hex_colors.
+
 # Colorscore
 
 Colorscore is a simple library that uses ImageMagick to quantize an image and find its representative colors. It can also score those colors against a palette using the CIE2000 Delta E formula. This could be used to index images for a "search by color" feature.
